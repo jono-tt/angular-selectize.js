@@ -98,13 +98,13 @@
             if (scope.multiple) {
               selectize.on('item_add', function(value, $item) {
                 var model = ngModelCtrl.$viewValue;
-                var option = scope.$parent[optionsProperty][value];
+                var option = scope.$parent.$eval(optionsProperty)[value];
                 value = option ? getOptionValue(option) : value;
 
                 if (model.indexOf(value) === -1) {
                   model.push(value);
                   if (!option) {
-                    scope.$parent[optionsProperty].push(value);
+                    scope.$parent.$eval(optionsProperty).push(value);
                   }
                   scope.$evalAsync(function() {
                     ngModelCtrl.$setViewValue(model);
@@ -113,7 +113,7 @@
               });
               selectize.on('item_remove', function(value) {
                 var model = ngModelCtrl.$viewValue;
-                var option = scope.$parent[optionsProperty][value];
+                var option = scope.$parent.$eval(optionsProperty)[value];
                 value = option ? getOptionValue(option) : value;
 
                 var index = model.indexOf(value);
@@ -130,7 +130,7 @@
 
         function getSelectedItems(model) {
             model = typeof model === 'string' ? [model] : model || [];
-            var selections = scope.$parent[optionsProperty].reduce(function(selected, option, index) {
+            var selections = scope.$parent.$eval(optionsProperty).reduce(function(selected, option, index) {
               var optionValue = getOptionValue(option);
               if (model.indexOf(optionValue) >= 0) {
                 selected[optionValue] = index;
